@@ -35,7 +35,7 @@ class WeatherAPI {
 
 // Example Usage
 (async () => {
-    const apiKey = '6063785d1bc189e4ec9978a5693e39a9'; // Replace with your OpenWeatherMap API key
+    const apiKey = 'Your API Key'; // Replace with your OpenWeatherMap API key
     const weatherAPI = new WeatherAPI(apiKey);
 
     const latitude = 44.34; // Replace with the desired latitude
