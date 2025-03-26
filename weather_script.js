@@ -1,29 +1,50 @@
-// Function to fetch weather data
-async function getWeather(city) {
-    const apiKey = 'YOUR_API_KEY'; // Replace with your OpenWeatherMap API key
-    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+class WeatherAPI {
+    constructor(apiKey) {
+        this.apiKey = apiKey;
+        this.baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
+    }
 
-    try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-            throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    // Method to fetch weather data by latitude and longitude
+    async getWeatherByCoordinates(lat, lon) {
+        const url = `${this.baseUrl}?lat=${lat}&lon=${lon}&appid=${this.apiKey}&units=metric`;
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status} - ${response.statusText}`);
+            }
+            const data = await response.json();
+            return this.formatWeatherData(data);
+        } catch (error) {
+            console.error('Failed to fetch weather data:', error.message);
+            throw error;
         }
-        const data = await response.json();
-        displayWeather(data);
-    } catch (error) {
-        console.error('Failed to fetch weather data:', error.message);
+    }
+
+    // Method to format weather data
+    formatWeatherData(data) {
+        return {
+            location: `${data.name}, ${data.sys.country}`,
+            temperature: `${data.main.temp}°C`,
+            weather: data.weather[0].description,
+            humidity: `${data.main.humidity}%`,
+            windSpeed: `${data.wind.speed} m/s`,
+        };
     }
 }
 
-// Function to display weather data
-function displayWeather(data) {
-    console.log(`Weather in ${data.name}, ${data.sys.country}:`);
-    console.log(`Temperature: ${data.main.temp}°C`);
-    console.log(`Weather: ${data.weather[0].description}`);
-    console.log(`Humidity: ${data.main.humidity}%`);
-    console.log(`Wind Speed: ${data.wind.speed} m/s`);
-}
-
 // Example Usage
-const city = 'London'; // Replace with the city you want to check
-getWeather(city);
+(async () => {
+    const apiKey = '6063785d1bc189e4ec9978a5693e39a9'; // Replace with your OpenWeatherMap API key
+    const weatherAPI = new WeatherAPI(apiKey);
+
+    const latitude = 44.34; // Replace with the desired latitude
+    const longitude = 10.99; // Replace with the desired longitude
+
+    try {
+        const weatherData = await weatherAPI.getWeatherByCoordinates(latitude, longitude);
+        console.log('Weather Data:', weatherData);
+    } catch (error) {
+        console.error('Error fetching weather data:', error.message);
+    }
+})();

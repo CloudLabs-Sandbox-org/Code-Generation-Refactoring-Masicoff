@@ -1,37 +1,37 @@
-#A poorly written example of a program in Python. It prompts the user for the number of elements to sum, takes those integers as input, and handles some basic error cases
+import sys
 
 MAX = 100
 
 def calculate_sum(arr):
-   result = 0
-   for num in arr:
-      result += num
-   return result
+    result = 0
+    for num in arr:
+        result += num
+    return result
 
 def main():
-   try:
-      n = int(input("Enter the number of elements (1-100): "))
-      if not 1 <= n <= MAX:
-            print("Invalid input. Please provide a digit ranging from 1 to 100.")
+    try:
+        arr = []
+        print(f"Enter integers to sum (up to {MAX} numbers). Press Enter without input to finish:")
+
+        while len(arr) < MAX:
+            try:
+                user_input = input()
+                if user_input == "":
+                    break
+                arr.append(int(user_input))
+            except ValueError:
+                print("Invalid input. Please enter a valid integer.")
+
+        if not arr:
+            print("No numbers were entered.")
             exit(1)
 
-      arr = []
+        total = calculate_sum(arr)
+        print("Sum of the numbers:", total)
 
-      print(f"Enter {n} integers:")
-      for _ in range(n):
-            try:
-               arr.append(int(input()))
-            except ValueError:
-               print("Invalid input. Please enter valid integers.")
-               exit(1)
-
-      total = calculate_sum(arr)
-
-      print("Sum of the numbers:", total)
-
-   except KeyboardInterrupt:
-      print("\nProgram terminated by user.")
-      exit(1)
+    except KeyboardInterrupt:
+        print("\nProgram terminated by user.")
+        exit(1)
 
 if __name__ == "__main__":
-   main()
+    main()
